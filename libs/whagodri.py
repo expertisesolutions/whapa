@@ -41,6 +41,7 @@ class WaBackup:
         if not oauth_token:
             print("Requesting access to Google...")
             token = gpsoauth.perform_master_login(email=gmail, password=password, android_id=android_id)
+            print("Token ", token)
             if token.get("Error") == "NeedsBrowser":
                 error(token)
                 print("\n")
@@ -337,7 +338,7 @@ def get_file(passed_file: str, is_dry_run: bool):
         )
         if response.status_code == 200:
             passed_file = output_folder + file_short
-            if not os.path.isfile(passed_file):
+            if not os.path.isfile(passed_file) or "Media" not in file_short:
                 os.makedirs(os.path.dirname(passed_file), exist_ok=True)
                 with open(passed_file, "bw") as destination:
                     for chunk in response.iter_content(chunk_size=None):
